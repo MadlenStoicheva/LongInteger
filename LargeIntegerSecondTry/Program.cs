@@ -20,19 +20,16 @@ namespace LargeIntegerSecondTry
             LargeInteger x = new LargeInteger(firstNumber);
             LargeInteger y = new LargeInteger(secondNumber);
 
-            string addition;
-            addition = x.Addition(firstNumber, secondNumber);
+            LargeInteger addition = new LargeInteger();
+            addition = x + y;
             Console.WriteLine("Addition: " + addition);
 
-            var subt = x.Subtraction(firstNumber, secondNumber);
+            var subt = x-y;
             Console.WriteLine("Subtraction: " + subt);
 
-            var multiplication = x.Multiplication(firstNumber, secondNumber);
+            var multiplication = x*y;
             Console.WriteLine("Multiplication: " + multiplication);
-
-            x.Division(firstNumber, secondNumber);
             
-
             Console.ReadKey();
         }
     }

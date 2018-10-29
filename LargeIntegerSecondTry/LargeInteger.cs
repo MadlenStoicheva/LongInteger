@@ -9,21 +9,20 @@ namespace LargeIntegerSecondTry
     public class LargeInteger
     {
         private string largeInteger;
-        //private List<int> digits;
+        private int Length;
+
+        public LargeInteger()
+        {
+            this.largeInteger="";
+        }
 
         public LargeInteger(string largeInteger)
         {
-            //digits = new List<int>();
-
-            //foreach (var item in largeInteger)
-            //{
-            //    digits.Add(item);
-            //}
-
             this.largeInteger = largeInteger;
+            this.Length = largeInteger.Length;
         }
 
-        public string Addition(string firstLongInteger, string secondLongInteger)
+        public static LargeInteger operator+ (LargeInteger firstLongInteger, LargeInteger secondLongInteger)
         {
             int maxLength = 0;
             if (firstLongInteger.Length > secondLongInteger.Length)
@@ -41,16 +40,16 @@ namespace LargeIntegerSecondTry
 
                 if (firstLongInteger.Length < secondLongInteger.Length)
                 {
-                    firstLongInteger = String.Join("", Enumerable.Repeat("0", diff)) + firstLongInteger;
+                    firstLongInteger = new LargeInteger(String.Join("", Enumerable.Repeat("0", diff)) + firstLongInteger);
                 }
                 else
                 {
-                    secondLongInteger = String.Join("", Enumerable.Repeat("0", diff)) + secondLongInteger;
+                    secondLongInteger = new LargeInteger(String.Join("", Enumerable.Repeat("0", diff)) + secondLongInteger);
                 }
             }
 
-            string firstGroupDigits = Reverse(firstLongInteger);
-            string secondGroupDigits = Reverse(secondLongInteger);
+            string firstGroupDigits = Reverse(firstLongInteger.ToString());
+            string secondGroupDigits = Reverse(secondLongInteger.ToString());
 
             string result = "";
             int numberInMind = 0;
@@ -80,10 +79,12 @@ namespace LargeIntegerSecondTry
                 result += numberInMind;
             }
 
-            return Reverse(result);
+            
+            LargeInteger additionResult = new LargeInteger(Reverse(result));
+            return additionResult;
         }
 
-        public string Subtraction(string firstLongInteger, string secondLongInteger)
+        public static LargeInteger operator- (LargeInteger firstLongInteger, LargeInteger secondLongInteger)
         {
             int maxLength = 0;
 
@@ -93,14 +94,15 @@ namespace LargeIntegerSecondTry
             }
             else if (firstLongInteger.Length == secondLongInteger.Length)
             {
-                if (Convert.ToInt32(firstLongInteger.First()) <= Convert.ToInt32(secondLongInteger.First()))
+                if (Convert.ToInt32(firstLongInteger.ToString().First()) <= Convert.ToInt32(secondLongInteger.ToString().First()))
                 {
                     bool smaller = false;
                     for (int i = 0; i < firstLongInteger.Length; i++)
                     {
-                        if (Convert.ToInt32(firstLongInteger[i]) > Convert.ToInt32(secondLongInteger[i]))
+                        if (Convert.ToInt32(firstLongInteger.ToString()[i]) > Convert.ToInt32(secondLongInteger.ToString()[i]))
                         {
                             maxLength = firstLongInteger.Length;
+                            smaller = false;
                         }
                         else
                         {
@@ -121,7 +123,6 @@ namespace LargeIntegerSecondTry
             else
             {
                 Console.WriteLine("Number one can't be negative number or less than second number!");
-                // maxLength = secondLongInteger.Length;
             }
 
             if (firstLongInteger.Length != secondLongInteger.Length)
@@ -130,16 +131,16 @@ namespace LargeIntegerSecondTry
 
                 if (firstLongInteger.Length < secondLongInteger.Length)
                 {
-                    firstLongInteger = String.Join("", Enumerable.Repeat("0", diff)) + firstLongInteger;
+                    firstLongInteger = new LargeInteger(String.Join("", Enumerable.Repeat("0", diff)) + firstLongInteger);
                 }
                 else
                 {
-                    secondLongInteger = String.Join("", Enumerable.Repeat("0", diff)) + secondLongInteger;
+                    secondLongInteger = new LargeInteger(String.Join("", Enumerable.Repeat("0", diff)) + secondLongInteger);
                 }
             }
 
-            string firstGroupDigits = Reverse(firstLongInteger);
-            string secondGroupDigits = Reverse(secondLongInteger);
+            string firstGroupDigits = Reverse(firstLongInteger.ToString());
+            string secondGroupDigits = Reverse(secondLongInteger.ToString());
 
             string result = "";
             int numberInMind = 0;
@@ -164,25 +165,26 @@ namespace LargeIntegerSecondTry
                 }
             }
 
+            LargeInteger subtractionResult = new LargeInteger();
+
             if (firstLongInteger.Equals(secondLongInteger))
             {
-                //  Console.WriteLine("Subtraction: " + "0");
-                return "0";
+                return subtractionResult =  new LargeInteger("0");
             }
             else
             {
-                // Console.WriteLine("Subtraction: " + Reverse(result).TrimStart('0'));
-                return Reverse(result).TrimStart('0');
+                return subtractionResult = new LargeInteger(Reverse(result).TrimStart('0'));
+
             }
         }
 
-        public string Multiplication(string firstLongInteger, string secondLongInteger)
+        public static LargeInteger operator*(LargeInteger firstLongInteger, LargeInteger secondLongInteger)
         {
             int maxLength = Math.Max(firstLongInteger.Length, secondLongInteger.Length);
             int minLength = Math.Min(firstLongInteger.Length, secondLongInteger.Length);
 
-            string firstGroupDigits = Reverse(firstLongInteger);
-            string secondGroupDigits = Reverse(secondLongInteger);
+            string firstGroupDigits = Reverse(firstLongInteger.ToString());
+            string secondGroupDigits = Reverse(secondLongInteger.ToString());
 
             List<string> finalResult = new List<string>();
             string result = "";
@@ -238,42 +240,54 @@ namespace LargeIntegerSecondTry
                 result = "";
             }
 
-            string sum = "";
-            string nextNumber = "";
+            LargeInteger sum = new LargeInteger();
+            LargeInteger nextNumber = new LargeInteger();
 
-            if (finalResult.Count <= 1)
+            LargeInteger multiplicationResult = new LargeInteger();
+
+            if (finalResult.Count < 1)
             {
-                // Console.WriteLine("Multiplication: " + Reverse(finalResult[0]));
-                return Reverse(finalResult[0]);
+                return multiplicationResult = new LargeInteger("0");
+            }
+            else if(finalResult.Count < 1)
+            {
+
+                return multiplicationResult = new LargeInteger(Reverse(finalResult[0]));
             }
             else
             {
 
                 for (int i = 0; i < finalResult.Count; i++)
                 {
-                    nextNumber = Reverse(finalResult[i]) + string.Concat(Enumerable.Repeat("0", i));
+                    nextNumber =  new LargeInteger(Reverse(finalResult[i]) + string.Concat(Enumerable.Repeat("0", i)));
 
-                    sum = Addition(sum, nextNumber);
+                    sum +=  nextNumber;
 
                 }
-                //Console.WriteLine("Multiplication: " + sum);
-                return sum;
+                return multiplicationResult = sum;
             }
         }
-
-        public void Division(string firstLongInteger, string secondLongInteger)
+        public string Division (string firstLongInteger, string secondLongInteger)
         {
-           
+            string result = "";
 
+            return result;
         }
 
+
+        public override string ToString()
+        {
+            base.ToString();
+            return largeInteger;
+        }
 
         static string Reverse(string inputText)
         {
             StringBuilder stringBuilder = new StringBuilder();
+            
             for (int i = inputText.Length - 1; i >= 0; i--)
             {
-                stringBuilder.Append(inputText[i]);
+                stringBuilder.Append(inputText.ToString()[i]);
             }
             return stringBuilder.ToString();
         }

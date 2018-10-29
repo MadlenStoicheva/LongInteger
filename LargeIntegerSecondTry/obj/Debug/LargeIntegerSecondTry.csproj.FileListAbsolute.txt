@@ -5,3 +5,10 @@ C:\Users\Madlen\source\repos\LargeInteger\LargeIntegerSecondTry\obj\Debug\LargeI
 C:\Users\Madlen\source\repos\LargeInteger\LargeIntegerSecondTry\obj\Debug\LargeIntegerSecondTry.csproj.CoreCompileInputs.cache
 C:\Users\Madlen\source\repos\LargeInteger\LargeIntegerSecondTry\obj\Debug\LargeIntegerSecondTry.exe
 C:\Users\Madlen\source\repos\LargeInteger\LargeIntegerSecondTry\obj\Debug\LargeIntegerSecondTry.pdb
+C:\Users\Madlen\source\repos\LargeInteger\LongInteger\LargeIntegerSecondTry\obj\Debug\LargeIntegerSecondTry.csprojAssemblyReference.cache
+C:\Users\Madlen\source\repos\LargeInteger\LongInteger\LargeIntegerSecondTry\obj\Debug\LargeIntegerSecondTry.csproj.CoreCompileInputs.cache
+C:\Users\Madlen\source\repos\LargeInteger\LongInteger\LargeIntegerSecondTry\obj\Debug\LargeIntegerSecondTry.exe
+C:\Users\Madlen\source\repos\LargeInteger\LongInteger\LargeIntegerSecondTry\obj\Debug\LargeIntegerSecondTry.pdb
+C:\Users\Madlen\source\repos\LargeInteger\LongInteger\LargeIntegerSecondTry\bin\Debug\LargeIntegerSecondTry.exe.config
+C:\Users\Madlen\source\repos\LargeInteger\LongInteger\LargeIntegerSecondTry\bin\Debug\LargeIntegerSecondTry.exe
+C:\Users\Madlen\source\repos\LargeInteger\LongInteger\LargeIntegerSecondTry\bin\Debug\LargeIntegerSecondTry.pdb
