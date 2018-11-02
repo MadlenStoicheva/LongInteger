@@ -21,15 +21,18 @@ namespace LargeIntegerSecondTry
             LargeInteger y = new LargeInteger(secondNumber);
 
             LargeInteger addition = new LargeInteger();
-            addition = x + y;
-            Console.WriteLine("Addition: " + addition);
+            //  addition = x + y;
+            // Console.WriteLine("Addition: " + addition);
 
-            var subt = x-y;
-            Console.WriteLine("Subtraction: " + subt);
+            //  var subt = x-y;
+            //  Console.WriteLine("Subtraction: " + subt);
 
-            var multiplication = x*y;
-            Console.WriteLine("Multiplication: " + multiplication);
-            
+            //var multiplication = x*y;
+            // Console.WriteLine("Multiplication: " + multiplication);
+
+            var division = x/y;
+            Console.WriteLine("Division: " + division);
+
             Console.ReadKey();
         }
     }
