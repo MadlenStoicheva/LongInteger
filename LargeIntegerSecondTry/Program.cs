@@ -11,27 +11,42 @@ namespace LargeIntegerSecondTry
         static void Main(string[] args)
         {
             Console.WriteLine("Enter first long integer: ");
-            string firstNumber = Console.ReadLine().TrimStart('0').Trim();
+            string firstNumber = Console.ReadLine();
 
             Console.WriteLine("Enter second long integer: ");
-            string secondNumber = Console.ReadLine().TrimStart('0').Trim();
+            string secondNumber = Console.ReadLine();
 
+            try
+            {
+                LargeInteger x = new LargeInteger(firstNumber);
+                LargeInteger y = new LargeInteger(secondNumber);
 
-            LargeInteger x = new LargeInteger(firstNumber);
-            LargeInteger y = new LargeInteger(secondNumber);
+                LargeInteger addition = new LargeInteger();
+                addition = x + y;
+                Console.WriteLine("Addition: " + addition);
 
-            LargeInteger addition = new LargeInteger();
-            //  addition = x + y;
-            // Console.WriteLine("Addition: " + addition);
+                var subt = x - y;
+                Console.WriteLine("Subtraction: " + subt);
 
-            //  var subt = x-y;
-            //  Console.WriteLine("Subtraction: " + subt);
+                var multiplication = x * y;
+                Console.WriteLine("Multiplication: " + multiplication);
 
-            //var multiplication = x*y;
-            // Console.WriteLine("Multiplication: " + multiplication);
+                var division = x / y;
+                Console.WriteLine("Division: " + division);
 
-            var division = x/y;
-            Console.WriteLine("Division: " + division);
+            }
+            catch (ArgumentException exeption)
+            {
+                Console.Error.WriteLine("Error: " + exeption.Message);
+            }
+            catch (DivideByZeroException exeption)
+            {
+                Console.Error.WriteLine("Error: " + exeption.Message);
+            }
+            catch (NotSupportedException exeption)
+            {
+                Console.Error.WriteLine("Error: " + exeption.Message);
+            }
 
             Console.ReadKey();
         }

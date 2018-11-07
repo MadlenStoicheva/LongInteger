@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace LargeIntegerSecondTry
@@ -18,8 +19,18 @@ namespace LargeIntegerSecondTry
 
         public LargeInteger(string largeInteger)
         {
-            this.largeInteger = largeInteger;
+            this.largeInteger = largeInteger.Trim();
             this.Length = largeInteger.Length;
+
+            if (String.IsNullOrEmpty(largeInteger))
+            {
+                throw new ArgumentException("Input cannot be empty!");
+            }
+
+            if (!Regex.IsMatch(largeInteger, "^[0-9]*$"))
+            {
+                throw new ArgumentException("Input must contains only numbers 0-9!");
+            }
         }
 
         public static LargeInteger operator +(LargeInteger firstLongInteger, LargeInteger secondLongInteger)
@@ -36,15 +47,13 @@ namespace LargeIntegerSecondTry
 
             if (firstLongInteger.Length != secondLongInteger.Length)
             {
-                var diff = Math.Abs(firstLongInteger.Length - secondLongInteger.Length);
-
                 if (firstLongInteger.Length < secondLongInteger.Length)
                 {
-                    firstLongInteger = new LargeInteger(String.Join("", Enumerable.Repeat("0", diff)) + firstLongInteger);
+                    firstLongInteger = AddZeroes(firstLongInteger, secondLongInteger);
                 }
                 else
                 {
-                    secondLongInteger = new LargeInteger(String.Join("", Enumerable.Repeat("0", diff)) + secondLongInteger);
+                    secondLongInteger = AddZeroes(firstLongInteger, secondLongInteger);
                 }
             }
 
@@ -87,56 +96,28 @@ namespace LargeIntegerSecondTry
         public static LargeInteger operator -(LargeInteger firstLongInteger, LargeInteger secondLongInteger)
         {
             int maxLength = 0;
+            LargeInteger subtractionResult = new LargeInteger();
 
             if (firstLongInteger.Length > secondLongInteger.Length)
             {
                 maxLength = firstLongInteger.Length;
+                //Here add Zeroes!
+                secondLongInteger = AddZeroes(firstLongInteger, secondLongInteger);
             }
             else if (firstLongInteger.Length == secondLongInteger.Length)
             {
-                if (Convert.ToInt32(firstLongInteger.ToString().First()) <= Convert.ToInt32(secondLongInteger.ToString().First()))
+                if (IsFirstIntegerSmaller(firstLongInteger, secondLongInteger) == false)
                 {
-                    bool smaller = false;
-                    for (int i = 0; i < firstLongInteger.Length; i++)
-                    {
-                        if (Convert.ToInt32(firstLongInteger.ToString()[i]) > Convert.ToInt32(secondLongInteger.ToString()[i]))
-                        {
-                            maxLength = firstLongInteger.Length;
-                            smaller = false;
-                        }
-                        else
-                        {
-                            smaller = true;
-                        }
-                    }
-
-                    if (smaller == true)
-                    {
-                        Console.WriteLine("First number is smaller than second number!");
-                    }
+                    maxLength = firstLongInteger.Length;
                 }
                 else
                 {
-                    maxLength = firstLongInteger.Length;
+                    throw new ArgumentException("First number is smaller than second number!");
                 }
             }
             else
             {
-                Console.WriteLine("Number one can't be negative number or less than second number!");
-            }
-
-            if (firstLongInteger.Length != secondLongInteger.Length)
-            {
-                var diff = Math.Abs(firstLongInteger.Length - secondLongInteger.Length);
-
-                if (firstLongInteger.Length < secondLongInteger.Length)
-                {
-                    firstLongInteger = new LargeInteger(String.Join("", Enumerable.Repeat("0", diff)) + firstLongInteger);
-                }
-                else
-                {
-                    secondLongInteger = new LargeInteger(String.Join("", Enumerable.Repeat("0", diff)) + secondLongInteger);
-                }
+                throw new ArgumentException("First integer can't be negative or less than second number!");
             }
 
             string firstGroupDigits = Reverse(firstLongInteger.ToString());
@@ -165,21 +146,27 @@ namespace LargeIntegerSecondTry
                 }
             }
 
-            LargeInteger subtractionResult = new LargeInteger();
 
-            if (firstLongInteger.Equals(secondLongInteger))
+            if (firstLongInteger.ToString().Equals(secondLongInteger.ToString()))
             {
-                return subtractionResult = new LargeInteger("0");
+                subtractionResult = new LargeInteger("0");
+                return subtractionResult;
             }
             else
             {
-                return subtractionResult = new LargeInteger(Reverse(result).TrimStart('0'));
+                subtractionResult = new LargeInteger(Reverse(result).TrimStart('0'));
+                return subtractionResult;
 
             }
         }
 
         public static LargeInteger operator *(LargeInteger firstLongInteger, LargeInteger secondLongInteger)
         {
+            if (firstLongInteger.ToString().Equals("0") || secondLongInteger.ToString().Equals("0"))
+            {
+                throw new ArgumentException("You can't multiply by 0!");
+            }
+
             int maxLength = Math.Max(firstLongInteger.Length, secondLongInteger.Length);
             int minLength = Math.Min(firstLongInteger.Length, secondLongInteger.Length);
 
@@ -242,21 +229,15 @@ namespace LargeIntegerSecondTry
 
             LargeInteger sum = new LargeInteger();
             LargeInteger nextNumber = new LargeInteger();
-
             LargeInteger multiplicationResult = new LargeInteger();
 
-            if (finalResult.Count < 1)
+            if (finalResult.Count == 1)
             {
-                return multiplicationResult = new LargeInteger("0");
-            }
-            else if (finalResult.Count == 1)
-            {
-
-                return multiplicationResult = new LargeInteger(Reverse(finalResult[0]));
+                multiplicationResult = new LargeInteger(Reverse(finalResult[0]));
+                return multiplicationResult;
             }
             else
             {
-
                 for (int i = 0; i < finalResult.Count; i++)
                 {
                     nextNumber = new LargeInteger(Reverse(finalResult[i]) + string.Concat(Enumerable.Repeat("0", i)));
@@ -264,116 +245,90 @@ namespace LargeIntegerSecondTry
                     sum += nextNumber;
 
                 }
-                return multiplicationResult = sum;
+                multiplicationResult = sum;
+
+                return multiplicationResult;
             }
         }
+
         public static LargeInteger operator /(LargeInteger firstLongInteger, LargeInteger secondLongInteger)
         {
-            LargeInteger result = new LargeInteger();
+            var diff = Math.Abs(firstLongInteger.Length - secondLongInteger.Length);
 
-            if (secondLongInteger.Length < 1 || firstLongInteger.Length < 1)
+            LargeInteger difference = new LargeInteger();
+            LargeInteger multiplyer = secondLongInteger;
+            LargeInteger subtractionResult = firstLongInteger;
+            LargeInteger sumFinalResult = new LargeInteger();
+
+
+            if (firstLongInteger.ToString().Equals("0") || secondLongInteger.ToString().Equals("0"))
             {
-                return result = new LargeInteger("You can't divide by 0!");
+                throw new DivideByZeroException("You can't divide by 0!");
             }
 
             if (firstLongInteger.Length < secondLongInteger.Length)
             {
-                // return result = new LargeInteger("Second long integer is bigger than first long integer!");
-                return result = new LargeInteger("0");
-            }
-
-            if (firstLongInteger.Length == 1 && secondLongInteger.Length == 1)
-            {
-                bool smaller = false;
-
-                if (Convert.ToInt32(firstLongInteger.ToString()[0]) > Convert.ToInt32(secondLongInteger.ToString()[0]))
-                {
-                    for (int i = 1; i < firstLongInteger.Length; i++)
-                    {
-                        if (Convert.ToInt32(firstLongInteger.ToString()[i]) > Convert.ToInt32(secondLongInteger.ToString()[i]))
-                        {
-                            smaller = false;
-                        }
-                        else
-                        {
-                            smaller = true;
-                        }
-                        if (smaller == true)
-                        {
-                            return result = new LargeInteger("0");
-                        }
-                    }
-                }
-                else
-                {
-                    smaller = false;
-                }
+                throw new NotSupportedException("Second long integer is bigger than first long integer! Result is 0!");
             }
 
             if (secondLongInteger.Length == 1 && secondLongInteger.ToString().Equals("1"))
             {
-                return result = firstLongInteger;
+                return firstLongInteger;
             }
 
-            LargeInteger multiplicationResult = new LargeInteger();
-            LargeInteger multiplyer = new LargeInteger("10");
-            LargeInteger subtractionResult = firstLongInteger;
-            LargeInteger sumFinalResult = new LargeInteger();
-
-            multiplicationResult = secondLongInteger * multiplyer;
-
-            if (firstLongInteger.Length > secondLongInteger.Length)
+            if (firstLongInteger.Length == secondLongInteger.Length)
             {
-                while (subtractionResult.Length >= multiplicationResult.Length )
+                if (IsFirstIntegerSmaller(firstLongInteger, secondLongInteger) == true)
                 {
-                    if (subtractionResult.Length==1 && subtractionResult.ToString().Equals("1"))
-                    {
-                        break;
-                    }
-                    if (!(subtractionResult.ToString().First() <= multiplicationResult.ToString().First()))
-                    {
+                    throw new ArgumentException("First integer is smaller than second number!");
+                }
+            }
 
-                        subtractionResult = subtractionResult - multiplicationResult;
-                        sumFinalResult += multiplyer;
+
+            while (subtractionResult.Length >= secondLongInteger.Length)
+            {
+                if (subtractionResult.Length == secondLongInteger.Length && subtractionResult.ToString()[0] < secondLongInteger.ToString()[0])
+                {
+                    break;
+                }
+
+                if (subtractionResult.Length > secondLongInteger.Length)
+                {
+                    if (subtractionResult.ToString().First() > secondLongInteger.ToString().First())
+                    {
+                        diff = Math.Abs(subtractionResult.Length - secondLongInteger.Length);
                     }
                     else
                     {
-                        multiplyer = new LargeInteger("1");
-                        multiplicationResult = secondLongInteger * multiplyer;
-                        subtractionResult = subtractionResult - multiplicationResult;
-                        sumFinalResult += multiplyer;
+                        diff = Math.Abs(subtractionResult.Length - secondLongInteger.Length) - 1;
+                    }
+
+                    difference = new LargeInteger("1" + GenerateZeroes(diff));
+                    multiplyer = secondLongInteger * difference;
+                    subtractionResult = subtractionResult - multiplyer;
+                    sumFinalResult += difference;
+                }
+                else
+                {
+                    if (IsFirstIntegerSmaller(subtractionResult, secondLongInteger) == false)
+                    {
+                        difference = new LargeInteger("1");
+
+                        subtractionResult = subtractionResult - secondLongInteger;
+                        sumFinalResult += difference;
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
             }
-            else if (firstLongInteger.Length == secondLongInteger.Length)
-            {
-                do
-                {
-                    subtractionResult = subtractionResult - secondLongInteger;
-                    sumFinalResult += new LargeInteger("1");
-                }
-                while (subtractionResult.Length == secondLongInteger.Length && subtractionResult.ToString().First() >= secondLongInteger.ToString().First());
-            }
-            else
-            {
-                do
-                {
-                    multiplyer = new LargeInteger("1");
-                    multiplicationResult = secondLongInteger * multiplyer;
-                    subtractionResult = subtractionResult - multiplicationResult;
-                    sumFinalResult += multiplyer;
-                }
-                while (subtractionResult.Length >= secondLongInteger.Length);
-            }
-
 
             return sumFinalResult;
         }
 
-
         public override string ToString()
         {
-           // base.ToString();
             return largeInteger;
         }
 
@@ -386,6 +341,69 @@ namespace LargeIntegerSecondTry
                 stringBuilder.Append(inputText.ToString()[i]);
             }
             return stringBuilder.ToString();
+        }
+
+        static LargeInteger AddZeroes(LargeInteger firstLongInteger, LargeInteger secondLongInteger)
+        {
+            var diff = Math.Abs(firstLongInteger.Length - secondLongInteger.Length);
+
+            if (firstLongInteger.Length < secondLongInteger.Length)
+            {
+                firstLongInteger = new LargeInteger(GenerateZeroes(diff) + firstLongInteger);
+                return firstLongInteger;
+            }
+            else
+            {
+                secondLongInteger = new LargeInteger(GenerateZeroes(diff) + secondLongInteger);
+                return secondLongInteger;
+            }
+        }
+
+        static bool IsFirstIntegerSmaller(LargeInteger firstLongInteger, LargeInteger secondLongInteger)
+        {
+            bool smaller = true;
+
+            if (Convert.ToInt32(firstLongInteger.ToString()[0]) <= Convert.ToInt32(secondLongInteger.ToString()[0]))
+            {
+                int i;
+                if (Convert.ToInt32(firstLongInteger.ToString()[0]) < Convert.ToInt32(secondLongInteger.ToString()[0]))
+                {
+                    i = 0;
+                }
+                else
+                {
+                    i = 1;
+                }
+
+                for (; i < firstLongInteger.Length;)
+                {
+                    if (Convert.ToInt32(firstLongInteger.ToString()[i]) >= Convert.ToInt32(secondLongInteger.ToString()[i]))
+                    {
+                        smaller = false;
+                        return false;
+                    }
+                    else
+                    {
+                        smaller = true;
+                        return true;
+                    }
+                }
+
+            }
+            else
+            {
+                smaller = false;
+                return false;
+            }
+
+            return smaller;
+        }
+
+        static string GenerateZeroes(int diff)
+        {
+            string Zeroes = String.Join("", Enumerable.Repeat("0", diff));
+
+            return Zeroes;
         }
     }
 }
