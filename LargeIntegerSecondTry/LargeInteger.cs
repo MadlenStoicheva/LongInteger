@@ -361,7 +361,7 @@ namespace LargeIntegerSecondTry
 
         static bool IsFirstIntegerSmaller(LargeInteger firstLongInteger, LargeInteger secondLongInteger)
         {
-            bool smaller = true;
+            bool smaller = false;
 
             if (Convert.ToInt32(firstLongInteger.ToString()[0]) <= Convert.ToInt32(secondLongInteger.ToString()[0]))
             {
@@ -401,9 +401,8 @@ namespace LargeIntegerSecondTry
 
         static string GenerateZeroes(int diff)
         {
-            string Zeroes = String.Join("", Enumerable.Repeat("0", diff));
+            return String.Join("", Enumerable.Repeat("0", diff));
 
-            return Zeroes;
         }
     }
 }
